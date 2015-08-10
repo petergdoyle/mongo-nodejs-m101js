@@ -14,7 +14,10 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "CentOS-7-x86_64-MIN"
 
-  config.vm.network "forwarded_port", guest: 27017, host: 27017, host_ip: "0.0.0.0", id: "mongodb", auto_correct: true
+  #allows an ssh connection to be forwarded through the host machine on 2222
+  #config.vm.network "forwarded_port", guest: 22, host: 2222, host_ip: "0.0.0.0", id: "ssh", auto_correct: true
+  #allows mongo connection to be forwarded through the host machine on 227017
+  #config.vm.network "forwarded_port", guest: 27017, host: 227017, host_ip: "0.0.0.0", id: "mongodb", auto_correct: true
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -40,6 +43,8 @@ Vagrant.configure(2) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
+
+  config.vm.synced_folder "mongo/", "/mongo"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -103,14 +108,19 @@ Vagrant.configure(2) do |config|
   curl --insecure https://gist.githubusercontent.com/petergdoyle/7451a7f694b20df709cc/raw/b01b001478b40fc52f333b0ff9f9cb7ac2a25ac7/mongodb.repo -o mongodb.repo
   mv mongodb.repo /etc/yum.repos.d/
   yum -y install mongodb-org mongodb-org-server
+  #sed -i 's@dbpath=/var/lib/mongo@dbpath=/vagrant/mongo/data@g' /etc/mongod.conf
   systemctl start mongod
-  chkconfig mongod on
+  chconfig mongod on
 
-  yum -y install vim htop
+  yum -y install vim htop curl wget
+
+  #systemctl start firewalld.service
+  #systemctl enable firewalld.service
+  #firewall-cmd --permanent --zone=public --add-port=22/tcp
+  #firewall-cmd --permanent --zone=public --add-port=27017/tcp
+  #firewall-cmd --permanent --zone=public --add-port=8082/tcp
 
   hostnamectl set-hostname m101.vbx
-
-  firewall-cmd --permanent --zone=public --add-port=27017/tcp
 
   SHELL
 end
