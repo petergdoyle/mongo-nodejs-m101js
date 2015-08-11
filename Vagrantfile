@@ -17,7 +17,12 @@ Vagrant.configure(2) do |config|
   #allows an ssh connection to be forwarded through the host machine on 2222
   #config.vm.network "forwarded_port", guest: 22, host: 2222, host_ip: "0.0.0.0", id: "ssh", auto_correct: true
   #allows mongo connection to be forwarded through the host machine on 227017
-  #config.vm.network "forwarded_port", guest: 27017, host: 227017, host_ip: "0.0.0.0", id: "mongodb", auto_correct: true
+
+  config.vm.network "forwarded_port", guest: 27017, host: 27017, host_ip: "0.0.0.0", id: "mongodb", auto_correct: true
+
+  config.vm.network "forwarded_port", guest: 8000, host: 28000, host_ip: "0.0.0.0", id: "node_port_8000", auto_correct: true
+
+  config.vm.network "forwarded_port", guest: 8080, host: 28080, host_ip: "0.0.0.0", id: "node_port_8000", auto_correct: true
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -44,7 +49,7 @@ Vagrant.configure(2) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
-  config.vm.synced_folder "mongo/", "/mongo"
+  #config.vm.synced_folder "mongo/", "/mongo"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
